@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Segreti della Marinatura — La Bottega della Sorana</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Lucide icons -->
+  <script src="js/lucide.min.js" defer></script>
+
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0D0B08;
+      --bg-card:   #1A1610;
+      --gold:      #B7A66F;
+      --gold-light:#CFC08E;
+      --gold-dark: #8A7A4E;
+      --text:      #F5EFE0;
+      --text-muted:#A89880;
+      --text-dim:  #5C5040;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ─── Background noise texture ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── Typography ─── */
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.1;
+    }
+
+    h1 { font-size: clamp(44px, 7vw, 80px); font-weight: 600; }
+    h2 { font-size: clamp(36px, 5vw, 56px); font-weight: 600; }
+    h3 { font-size: clamp(22px, 3vw, 32px); font-weight: 600; }
+
+    /* ─── Gold metallic effect ─── */
+    .gold-text {
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 35%, #A8893A 55%, #E8D080 75%, #B7965A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(90deg, #C9A84B, #F0D878, #A8893A);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .text-muted { color: var(--text-muted); }
+    .text-gold  { color: var(--gold); }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { position: relative; z-index: 1; }
+
+    /* ─── Divider ─── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.35;
+      margin: 0;
+    }
+
+    /* ─── Buttons ─── */
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, #D4B96A 0%, #A8893A 30%, #C9A84B 55%, #E8D080 75%, #A8893A 100%);
+      background-size: 200% 200%;
+      color: #1a1200;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 16px 40px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background-position 400ms ease, transform 300ms ease, box-shadow 300ms ease;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 13px;
+      box-shadow: 0 2px 12px rgba(180, 140, 50, 0.25), inset 0 1px 0 rgba(255,240,160,0.3);
+    }
+
+    .btn-primary:hover {
+      background-position: 100% 100%;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(180, 140, 50, 0.45), inset 0 1px 0 rgba(255,240,160,0.4);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--gold);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 15px 40px;
+      border-radius: 6px;
+      border: 1px solid var(--gold);
+      cursor: pointer;
+      transition: background 300ms ease, transform 300ms ease;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(200, 168, 75, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      background: linear-gradient(to bottom, rgba(13,11,8,0.95), transparent);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-img { height: 72px; width: auto; display: block; }
+    .nav-cta { font-size: 14px; padding: 12px 28px; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 0 100px;
+      background:
+        radial-gradient(ellipse 60% 50% at 85% 20%, rgba(139, 90, 43, 0.1) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(200, 168, 75, 0.07) 0%, transparent 70%);
+    }
+
+    #hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .hero-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0.4;
+      max-width: 80px;
+    }
+
+    #hero h1 {
+      margin-bottom: 24px;
+    }
+
+    #hero h1 em {
+      font-style: italic;
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .hero-video-wrapper {
+      position: relative;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg-card);
+      border: 2px solid rgba(200, 168, 75, 0.3);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: border-color 300ms ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .video-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(200,168,75,0.05), transparent 70%);
+    }
+
+    .video-placeholder:hover {
+      border-color: rgba(200, 168, 75, 0.6);
+    }
+
+    .play-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(200, 168, 75, 0.15);
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 300ms ease, transform 300ms ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-placeholder:hover .play-btn {
+      background: rgba(200, 168, 75, 0.25);
+      transform: scale(1.08);
+    }
+
+    .play-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--gold);
+      margin-left: 4px;
+    }
+
+    .video-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-border-deco {
+      position: absolute;
+      top: -8px; right: -8px;
+      width: 60px; height: 60px;
+      border-top: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+      border-radius: 0 10px 0 0;
+      opacity: 0.5;
+    }
+
+    .video-border-deco-2 {
+      position: absolute;
+      bottom: -8px; left: -8px;
+      width: 60px; height: 60px;
+      border-bottom: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+      border-radius: 0 0 0 10px;
+      opacity: 0.5;
+    }
+
+    /* ─── FORM SECTION ─── */
+    #form-section {
+      padding: 100px 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 50%, rgba(200, 168, 75, 0.04) 0%, transparent 70%);
+    }
+
+    .form-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .form-wrapper h2 { margin-bottom: 16px; }
+    .form-wrapper .sub { color: var(--text-muted); margin-bottom: 48px; }
+
+    /* Step indicator */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 48px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: all 300ms ease;
+    }
+
+    .step.active .step-num {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+    }
+
+    .step.done .step-num {
+      background: rgba(200,168,75,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .step-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .step.active .step-label { color: var(--text); }
+
+    .step-connector {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-dark));
+      opacity: 0.4;
+      margin: 0 8px;
+    }
+
+    /* Form card */
+    .form-card {
+      background: rgba(26, 22, 16, 0.8);
+      border: 1px solid rgba(200, 168, 75, 0.2);
+      border-radius: 12px;
+      padding: 48px 40px;
+      backdrop-filter: blur(10px);
+    }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .form-step h3 {
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .form-step p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200, 168, 75, 0.3);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 250ms ease, box-shadow 250ms ease;
+    }
+
+    .input-group input::placeholder { color: var(--text-dim); }
+
+    .input-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.1);
+    }
+
+    .form-step .btn-primary { width: 100%; text-align: center; }
+
+    .checkout-placeholder {
+      background: rgba(200,168,75,0.06);
+      border: 1px dashed rgba(200,168,75,0.3);
+      border-radius: 8px;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .checkout-placeholder strong {
+      display: block;
+      font-size: 18px;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* ─── FILIERA ─── */
+    #filiera {
+      /* height set via JS before ScrollTrigger init */
+      background:
+        radial-gradient(ellipse 50% 60% at 10% 50%, rgba(200,168,75,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 90% 50%, rgba(139,90,43,0.06) 0%, transparent 70%);
+    }
+
+    #fl-pin {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      overflow: hidden;
+    }
+
+    /* ── Left column ── */
+    .fl-left {
+      width: 300px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fl-intro { margin-bottom: 48px; }
+
+    .fl-intro h2 {
+      font-size: clamp(26px, 2.8vw, 40px);
+      line-height: 1.15;
+      margin-top: 14px;
+    }
+
+    .fl-em {
+      font-style: italic;
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Timeline list */
+    .fl-tl {
+      position: relative;
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .fl-tl-track {
+      position: absolute;
+      left: 6px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: rgba(200,168,75,0.1);
+      border-radius: 2px;
+    }
+
+    /* Dot that travels with the fill */
+    .fl-tl-fill::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(200,168,75,0.6);
+    }
+
+    .fl-tl-fill {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 0%;
+      background: linear-gradient(180deg, #C9A84B, #F0D878, #B7A66F);
+      border-radius: 2px;
+    }
+
+    .fl-tl-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      position: relative;
+    }
+
+    .fl-tl-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fl-tl-last-item .fl-tl-title {
+      background: linear-gradient(90deg, #C9A84B, #F0D878);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 500;
+    }
+
+    /* ── Right column: cards ── */
+    .fl-right {
+      flex: 1;
+      position: relative;
+      height: 400px;
+    }
+
+    .fl-card {
+      position: absolute;
+      inset: 0;
+      background: rgba(26,22,16,0.9);
+      border: 1px solid rgba(200,168,75,0.18);
+      border-radius: 16px;
+      padding: 44px 48px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      will-change: transform, opacity;
+      backdrop-filter: blur(8px);
+      /* Initial state: hidden below — GSAP overrides on init */
+      opacity: 0;
+      transform: translateY(90px);
+    }
+
+    .fl-card[data-i="0"] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fl-card-num { display: none; }
+
+    .fl-card-body h3 {
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.2;
+      position: relative;
+    }
+
+    .fl-card-body p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 460px;
+      position: relative;
+    }
+
+    /* Last card special */
+    .fl-card-last {
+      border-color: rgba(200,168,75,0.45);
+      box-shadow: 0 0 80px rgba(200,168,75,0.08), inset 0 1px 0 rgba(255,240,160,0.06);
+    }
+
+    .fl-card-last .fl-card-body h3 {
+      font-size: clamp(26px, 3.2vw, 42px);
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .fl-card-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #0D0B08;
+      background: linear-gradient(135deg, #C9A84B, #F0D878, #A8893A);
+      padding: 5px 14px;
+      border-radius: 4px;
+      margin-bottom: 18px;
+    }
+
+    /* ─── FILIERA MOBILE ─── */
+    .fl-mobile-header  { display: none; }
+    .fl-mobile-progress { display: none; }
+    .fl-icon-strip { display: none; }
+
+    @media (max-width: 768px) {
+      /* Restack as column, header → progress → cards */
+      #fl-pin {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        justify-content: flex-start;
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .fl-left { display: none; }
+
+      /* Mobile header */
+      .fl-mobile-header {
+        display: block;
+        flex-shrink: 0;
+        padding: 52px 20px 16px;
+      }
+      .fl-mobile-header h2 {
+        font-size: clamp(26px, 7vw, 36px);
+        margin-top: 10px;
+      }
+
+      /* Icon strip */
+      .fl-icon-strip {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px 16px;
+        gap: 4px;
+      }
+
+      .fl-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        opacity: 0.12;
+        transform: scale(0.55);
+        transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+        flex: 1;
+      }
+
+      .fl-icon svg,
+      .fl-icon i svg {
+        width: 26px;
+        height: 26px;
+        display: block;
+        stroke-width: 1.5;
+      }
+
+
+      /* Van + snowflake combo */
+      .fl-icon-combo {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .fl-icon-snow {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        display: flex !important;
+      }
+      .fl-icon-snow svg {
+        width: 13px !important;
+        height: 13px !important;
+        stroke-width: 2;
+        background: var(--bg);
+        border-radius: 50%;
+        padding: 1px;
+      }
+
+      /* Past icon: small but visible */
+      .fl-icon.fl-icon-past {
+        opacity: 0.35;
+        transform: scale(0.72);
+      }
+
+      /* Active icon: full size, bright */
+      .fl-icon.fl-icon-active {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 6px rgba(200,168,75,0.5));
+      }
+
+      /* Last icon active: extra prominent */
+      .fl-icon.fl-icon-active[data-i="6"] {
+        transform: scale(1.28);
+        filter: drop-shadow(0 0 10px rgba(240,216,120,0.7));
+      }
+
+      /* Horizontal progress bar */
+      .fl-mobile-progress {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        gap: 14px;
+        padding: 0 20px 16px;
+      }
+      .fl-mob-track {
+        flex: 1;
+        height: 2px;
+        background: rgba(200,168,75,0.15);
+        border-radius: 2px;
+        position: relative;
+      }
+      .fl-mob-fill {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 0%;
+        background: linear-gradient(90deg, #C9A84B, #F0D878);
+        border-radius: 2px;
+      }
+      .fl-mob-fill::after {
+        content: '';
+        position: absolute;
+        right: -4px; top: 50%;
+        transform: translateY(-50%);
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 8px rgba(200,168,75,0.6);
+      }
+      .fl-mob-counter {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        color: var(--gold);
+        flex-shrink: 0;
+      }
+
+      /* Cards area — flex:1 gives definite height, margin creates side spacing */
+      .fl-right {
+        flex: 1;
+        height: auto;
+        margin: 0 16px 24px;
+      }
+
+      /* Card adjustments */
+      .fl-card {
+        padding: 28px 24px;
+        border-radius: 12px;
+      }
+      .fl-card-body h3 {
+        font-size: clamp(18px, 5.5vw, 24px);
+        margin-bottom: 10px;
+      }
+      .fl-card-body p {
+        font-size: 14px;
+        line-height: 1.65;
+        max-width: 100%;
+      }
+      .fl-card-last .fl-card-body h3 {
+        font-size: clamp(20px, 6vw, 28px);
+      }
+      .fl-card-badge {
+        font-size: 9px;
+        padding: 4px 10px;
+        margin-bottom: 12px;
+      }
+    }
+
+    /* ─── REFERENZE ─── */
+    #referenze {
+      padding: 100px 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 90% 50%, rgba(139, 90, 43, 0.07) 0%, transparent 70%);
+    }
+
+    .section-header {
+      margin-bottom: 64px;
+    }
+
+    .section-header .label { margin-bottom: 16px; }
+    .section-header h2 { margin-bottom: 16px; }
+    .section-header p { color: var(--text-muted); max-width: 500px; }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(200,168,75,0.1);
+      border: 1px solid rgba(200,168,75,0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    .stat-item {
+      background: var(--bg-card);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: rgba(26, 22, 16, 0.8);
+      border: 1px solid rgba(200, 168, 75, 0.2);
+      border-radius: 10px;
+      padding: 32px;
+      transition: border-color 300ms ease, transform 300ms ease;
+    }
+
+    .testimonial-card:hover {
+      border-color: rgba(200, 168, 75, 0.45);
+      transform: scale(1.02);
+    }
+
+    .quote-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      color: var(--gold);
+      opacity: 0.4;
+      line-height: 0.6;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .testimonial-author {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .testimonial-role {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ─── CHI SONO ─── */
+    #chi-sono {
+      padding: 100px 0;
+    }
+
+    #chi-sono .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-image-wrapper {
+      position: relative;
+    }
+
+    .about-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: var(--bg-card);
+      border: 2px solid rgba(200, 168, 75, 0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .about-deco {
+      position: absolute;
+      top: -16px; left: -16px;
+      width: 100px; height: 100px;
+      border-top: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+      border-radius: 10px 0 0 0;
+      opacity: 0.4;
+    }
+
+    .about-deco-2 {
+      position: absolute;
+      bottom: -16px; right: -16px;
+      width: 100px; height: 100px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+      border-radius: 0 0 10px 0;
+      opacity: 0.4;
+    }
+
+    .about-content .label { margin-bottom: 20px; }
+    .about-content h2 { margin-bottom: 24px; }
+    .about-content h2 em {
+      font-style: italic;
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .about-content p {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .expertise-list {
+      list-style: none;
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .expertise-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .expertise-list li::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 60px 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 40%, #A8893A 65%, #E8D080 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 250ms ease;
+    }
+
+    .footer-links a:hover { color: var(--text-muted); }
+
+    .footer-copy {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      #hero .container,
+      #chi-sono .container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer .container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-card { padding: 32px 24px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .steps { gap: 0; }
+      .step-connector { width: 32px; }
+    }
+
+    /* ─── Fade-in initial state for GSAP ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <img src="brand-assets/logo.png" alt="La Bottega della Sorana" class="logo-img" />
+      </a>
+      <a href="#form-section" class="btn-primary nav-cta">Voglio il corso</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="label">Mini corso gratuito</span>
+        </div>
+        <h1>
+          I <em>segreti</em> della<br>marinatura perfetta
+        </h1>
+        <p class="hero-sub">
+          Scopri le tecniche che uso ogni giorno nella mia macelleria per trasformare
+          un taglio di carne in un'esperienza indimenticabile.
+        </p>
+        <a href="#form-section" class="btn-primary">Accedi al corso gratuito</a>
+      </div>
+
+      <div class="hero-video-wrapper">
+        <div class="video-placeholder">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span class="video-label">Video di presentazione del corso</span>
+        </div>
+        <div class="video-border-deco"></div>
+        <div class="video-border-deco-2"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ FORM ═══ -->
+  <section id="form-section">
+    <div class="container">
+      <div class="form-wrapper">
+        <span class="label fade-up">Accesso immediato</span>
+        <h2 class="fade-up">Entra nel corso ora</h2>
+        <p class="sub fade-up">
+          Lascia la tua email e accedi subito al videocorso. È gratuito.
+        </p>
+
+        <!-- Step indicator -->
+        <div class="steps fade-up">
+          <div class="step active" id="step-indicator-1">
+            <div class="step-num">1</div>
+            <div class="step-label">La tua email</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step" id="step-indicator-2">
+            <div class="step-num">2</div>
+            <div class="step-label">Completa l'iscrizione</div>
+          </div>
+        </div>
+
+        <div class="form-card fade-up">
+
+          <!-- Step 1: Email -->
+          <div class="form-step active" id="step-1">
+            <h3>Dove ti mandiamo il corso?</h3>
+            <p>Inserisci la tua email per ricevere l'accesso immediato.</p>
+            <div class="input-group">
+              <label for="email">Indirizzo email</label>
+              <input type="email" id="email" placeholder="tua@email.com" />
+            </div>
+            <button class="btn-primary" onclick="goToStep2()">
+              Voglio il corso gratuito →
+            </button>
+          </div>
+
+          <!-- Step 2: Checkout -->
+          <div class="form-step" id="step-2">
+            <h3>Perfetto, ci siamo quasi</h3>
+            <p>Completa la registrazione per accedere al corso.</p>
+            <div class="checkout-placeholder">
+              <strong>Checkout placeholder</strong>
+              Qui verrà integrato il sistema di pagamento (Stripe, Gumroad, ecc.)
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ FILIERA ═══ -->
+  <section id="filiera">
+    <div id="fl-pin">
+
+      <!-- Mobile only: header + progress bar -->
+      <div class="fl-mobile-header">
+        <span class="label">La nostra forza</span>
+        <h2>Abbiamo davvero<br>il controllo di<br><em class="fl-em">tutta la filiera</em></h2>
+      </div>
+      <!-- Mobile icon strip -->
+      <div class="fl-icon-strip" id="fl-icon-strip">
+
+        <div class="fl-icon" data-i="0"><i data-lucide="leaf"></i></div>
+        <div class="fl-icon" data-i="1"><i data-lucide="tractor"></i></div>
+        <div class="fl-icon" data-i="2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Roof gable -->
+            <path d="M2 10 L12 2 L22 10"/>
+            <!-- Walls -->
+            <path d="M4 10 L4 22 L20 22 L20 10"/>
+            <!-- Roof-to-wall connectors -->
+            <line x1="2" y1="10" x2="4" y2="10"/>
+            <line x1="20" y1="10" x2="22" y2="10"/>
+            <!-- Arched door -->
+            <path d="M9 22 L9 16 Q9 13 12 13 Q15 13 15 16 L15 22"/>
+            <!-- Round window in gable -->
+            <circle cx="12" cy="6.5" r="1.5"/>
+          </svg>
+        </div>
+        <div class="fl-icon" data-i="3"><i data-lucide="beef"></i></div>
+        <div class="fl-icon" data-i="4"><i data-lucide="package-2"></i></div>
+        <div class="fl-icon" data-i="5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Cargo box (refrigerated) -->
+            <rect x="1" y="4" width="13" height="11" rx="1"/>
+            <!-- Snowflake inside box -->
+            <line x1="7.5" y1="6.5" x2="7.5" y2="12.5"/>
+            <line x1="4.5" y1="9.5" x2="10.5" y2="9.5"/>
+            <line x1="5.5" y1="7.5" x2="9.5" y2="11.5"/>
+            <line x1="5.5" y1="11.5" x2="9.5" y2="7.5"/>
+            <!-- Cab -->
+            <path d="M14 7.5 L14 15 L22 15 L22 11 L20 7.5 Z"/>
+            <!-- Cab window -->
+            <path d="M15 8.5 L15 11.5 L21 11.5 L19.5 8.5 Z"/>
+            <!-- Wheels -->
+            <circle cx="5" cy="17.5" r="2"/>
+            <circle cx="19.5" cy="17.5" r="2"/>
+          </svg>
+        </div>
+        <div class="fl-icon" data-i="6"><i data-lucide="book-open"></i></div>
+
+      </div>
+
+      <div class="fl-mobile-progress">
+        <div class="fl-mob-track"><div class="fl-mob-fill" id="fl-mob-fill"></div></div>
+        <span class="fl-mob-counter" id="fl-mob-counter">01 / 07</span>
+      </div>
+
+      <!-- Left: intro + timeline -->
+      <div class="fl-left">
+        <div class="fl-intro">
+          <span class="label">La nostra forza</span>
+          <h2>Abbiamo davvero<br>il controllo di<br><em class="fl-em">tutta la filiera</em></h2>
+        </div>
+        <div class="fl-tl">
+          <div class="fl-tl-track"><div class="fl-tl-fill" id="fl-tl-fill"></div></div>
+          <div class="fl-tl-item" data-i="0"><span class="fl-tl-title">Partiamo dai campi</span></div>
+          <div class="fl-tl-item" data-i="1"><span class="fl-tl-title">Raccogliamo il foraggio</span></div>
+          <div class="fl-tl-item" data-i="2"><span class="fl-tl-title">Alleviamo le bovine</span></div>
+          <div class="fl-tl-item" data-i="3"><span class="fl-tl-title">Lavoriamo la carne</span></div>
+          <div class="fl-tl-item" data-i="4"><span class="fl-tl-title">Componiamo la tua box</span></div>
+          <div class="fl-tl-item" data-i="5"><span class="fl-tl-title">Spediamo in tutta Italia</span></div>
+          <div class="fl-tl-item fl-tl-last-item" data-i="6"><span class="fl-tl-title">I nostri Videocorsi</span></div>
+        </div>
+      </div>
+
+      <!-- Right: cards -->
+      <div class="fl-right">
+
+        <div class="fl-card" data-i="0">
+          <div class="fl-card-num">01</div>
+          <div class="fl-card-body">
+            <h3>Partiamo dai campi</h3>
+            <p>Coltiviamo l'erba che diventerà il cibo delle nostre bovine. Sappiamo esattamente cosa cresce nel terreno prima ancora che arrivi in stalla.</p>
+          </div>
+        </div>
+
+        <div class="fl-card" data-i="1">
+          <div class="fl-card-num">02</div>
+          <div class="fl-card-body">
+            <h3>Raccogliamo il foraggio</h3>
+            <p>Con il metodo del pre-appassimento — un'innovazione che preserva i nutrienti chiave. Nessun compromesso sulla qualità dell'alimentazione.</p>
+          </div>
+        </div>
+
+        <div class="fl-card" data-i="2">
+          <div class="fl-card-num">03</div>
+          <div class="fl-card-body">
+            <h3>Alleviamo le bovine</h3>
+            <p>In spazi ampi, con lettiera a paglia. Benessere animale non come slogan ma come scelta quotidiana che si sente nella carne.</p>
+          </div>
+        </div>
+
+        <div class="fl-card" data-i="3">
+          <div class="fl-card-num">04</div>
+          <div class="fl-card-body">
+            <h3>Lavoriamo la carne</h3>
+            <p>Direttamente nel nostro laboratorio agricolo. Ogni taglio selezionato e lavorato con la stessa cura con cui abbiamo allevato l'animale.</p>
+          </div>
+        </div>
+
+        <div class="fl-card" data-i="4">
+          <div class="fl-card-num">05</div>
+          <div class="fl-card-body">
+            <h3>Componiamo la tua box</h3>
+            <p>Personalizzata su misura. Scegli i tagli, definiamo le quantità. La tua box è unica, come le tue esigenze.</p>
+          </div>
+        </div>
+
+        <div class="fl-card" data-i="5">
+          <div class="fl-card-num">06</div>
+          <div class="fl-card-body">
+            <h3>Spediamo in tutta Italia</h3>
+            <p>Con furgoni a temperatura controllata. Consegna garantita in 24–72 ore. La catena del freddo non si rompe mai.</p>
+          </div>
+        </div>
+
+        <div class="fl-card fl-card-last" data-i="6">
+          <div class="fl-card-num">07</div>
+          <div class="fl-card-body">
+            <div class="fl-card-badge">Ciò che ci distingue davvero</div>
+            <h3>Ti insegniamo a cuocere<br>e trattare la carne</h3>
+            <p>Con i nostri videocorsi. Perché vendere carne di qualità non basta — vogliamo che tu sappia valorizzarla al massimo, ogni volta.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ REFERENZE ═══ -->
+  <section id="referenze">
+    <div class="container">
+      <div class="section-header fade-up">
+        <span class="label">Numeri e credibilità</span>
+        <h2>Una vita dedicata alla carne</h2>
+        <p>Anni di esperienza, filiera controllata, clienti soddisfatti. Non parliamo — dimostriamo.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-item fade-up">
+          <div class="stat-number" data-target="20">0</div>
+          <div class="stat-label">Anni di esperienza</div>
+        </div>
+        <div class="stat-item fade-up">
+          <div class="stat-number" data-target="100">0</div>
+          <div class="stat-label">% filiera controllata</div>
+        </div>
+        <div class="stat-item fade-up">
+          <div class="stat-number" data-target="500">0</div>
+          <div class="stat-label">Clienti soddisfatti</div>
+        </div>
+        <div class="stat-item fade-up">
+          <div class="stat-number" data-target="12">0</div>
+          <div class="stat-label">Tagli selezionati</div>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="testimonials-grid">
+        <div class="testimonial-card fade-up">
+          <div class="quote-mark">"</div>
+          <p class="testimonial-text">
+            La qualità della carne è eccezionale. Si sente che c'è una cura enorme dietro ogni taglio.
+            Non tornerò mai più al supermercato.
+          </p>
+          <div class="testimonial-author">Marco R.</div>
+          <div class="testimonial-role">Cliente — Padova</div>
+        </div>
+        <div class="testimonial-card fade-up">
+          <div class="quote-mark">"</div>
+          <p class="testimonial-text">
+            Ho imparato più sulla marinatura in questo corso che in anni di tentativi a casa.
+            Tecniche semplici ma che fanno una differenza enorme.
+          </p>
+          <div class="testimonial-author">Giulia T.</div>
+          <div class="testimonial-role">Appassionata di cucina — Venezia</div>
+        </div>
+        <div class="testimonial-card fade-up">
+          <div class="quote-mark">"</div>
+          <p class="testimonial-text">
+            Sapere cosa mangiano le bovine, come vengono allevate — questa trasparenza
+            è rara. È un valore che si sente nel prodotto finale.
+          </p>
+          <div class="testimonial-author">Andrea M.</div>
+          <div class="testimonial-role">Ristoratore — Treviso</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ CHI SONO ═══ -->
+  <section id="chi-sono">
+    <div class="container">
+      <div class="about-image-wrapper fade-up">
+        <div class="about-image">
+          [ Foto placeholder — allevatore/macellaio ]
+        </div>
+        <div class="about-deco"></div>
+        <div class="about-deco-2"></div>
+      </div>
+
+      <div class="about-content">
+        <span class="label fade-up">Chi sono</span>
+        <h2 class="fade-up">Allevatore, macellaio.<br><em>Non il contrario.</em></h2>
+        <p class="fade-up">
+          Sono nato in azienda agricola. Ho imparato a riconoscere una bovina sana
+          prima ancora di saper riconoscere un taglio di carne.
+          Questa è la differenza tra me e un macellaio qualunque.
+        </p>
+        <p class="fade-up">
+          Coltivo i campi, scelgo cosa danno da mangiare alle mie bovine, le allevo
+          con cura e le lavoro nel mio laboratorio. Ogni fase è mia.
+          Ogni scelta è consapevole.
+        </p>
+        <ul class="expertise-list">
+          <li class="fade-up">Allevamento bovino da oltre 20 anni</li>
+          <li class="fade-up">Esperto di tagli, cotture e tecniche di marinatura</li>
+          <li class="fade-up">Filiera 100% controllata — dal campo al bancone</li>
+          <li class="fade-up">Vendita diretta in negozio e online con spedizione refrigerata</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <a href="#" class="footer-logo">La Bottega della Sorana</a>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Termini di servizio</a></li>
+        <li><a href="#">Contatti</a></li>
+      </ul>
+      <p class="footer-copy">© 2024 La Bottega della Sorana. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Step form logic ───
+    function goToStep2() {
+      const email = document.getElementById('email').value.trim();
+      if (!email || !email.includes('@')) {
+        document.getElementById('email').style.borderColor = '#C0392B';
+        document.getElementById('email').focus();
+        return;
+      }
+      document.getElementById('email').style.borderColor = '';
+
+      // Update step indicators
+      document.getElementById('step-indicator-1').classList.remove('active');
+      document.getElementById('step-indicator-1').classList.add('done');
+      document.getElementById('step-indicator-2').classList.add('active');
+
+      // Switch step
+      document.getElementById('step-1').classList.remove('active');
+      document.getElementById('step-2').classList.add('active');
+
+      // Scroll to form
+      document.getElementById('form-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ─── GSAP animations ───
+    window.addEventListener('load', () => {
+      if (typeof gsap === 'undefined') return;
+
+      // Prevent browser scroll restoration causing mid-page init
+      history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+
+      // Init Lucide icons
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero fade-in on load
+      gsap.from('#hero .hero-content > *', {
+        y: 40, opacity: 0, duration: 0.9,
+        stagger: 0.15, ease: 'power2.out', delay: 0.2
+      });
+      gsap.from('#hero .hero-video-wrapper', {
+        y: 30, opacity: 0, duration: 1,
+        ease: 'power2.out', delay: 0.5
+      });
+
+      // ─── Filiera animation ───
+      const FL_CARDS   = 7;
+      const isMobile   = window.innerWidth < 768;
+      const FL_STEP    = isMobile ? 500 : 750;
+      const flCards    = gsap.utils.toArray('.fl-card');
+      const flTlItems  = gsap.utils.toArray('.fl-tl-item');
+      const flFill     = document.getElementById('fl-tl-fill');
+      const flMobFill  = document.getElementById('fl-mob-fill');
+      const flMobCount = document.getElementById('fl-mob-counter');
+
+      // Initial state: card 0 visible, rest below
+      gsap.set(flCards[0], { y: 0, opacity: 1, scale: 1 });
+      for (let i = 1; i < FL_CARDS; i++) {
+        gsap.set(flCards[i], { y: 90, opacity: 0, scale: 1 });
+      }
+      flTlItems.forEach(item => gsap.set(item, { opacity: 0, x: -12 }));
+      gsap.set(flFill, { height: '0%' });
+
+      // Set section height so sticky has scroll room
+      document.getElementById('filiera').style.height =
+        `calc(100vh + ${FL_CARDS * FL_STEP}px)`;
+
+      // On mobile, give .fl-right an explicit height so absolute cards have a reference
+      if (isMobile) {
+        const headerH  = document.querySelector('.fl-mobile-header').offsetHeight;
+        const progressH = document.querySelector('.fl-mobile-progress').offsetHeight;
+        const cardH = window.innerHeight - headerH - progressH - 40;
+        document.querySelector('.fl-right').style.height = cardH + 'px';
+      }
+
+      const flTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#filiera',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const step = self.progress * FL_CARDS;
+
+            // Desktop: dot timeline
+            flTlItems.forEach((item, i) => {
+              const threshold = (i + 0.3) / FL_CARDS;
+              if (step > threshold) item.classList.add('fl-done');
+              else item.classList.remove('fl-done');
+            });
+
+            // Mobile: horizontal progress bar + counter + icons
+            if (flMobFill) {
+              flMobFill.style.width = (self.progress * 100) + '%';
+              const current = Math.min(Math.floor(step) + 1, FL_CARDS);
+              flMobCount.textContent =
+                String(current).padStart(2, '0') + ' / ' + String(FL_CARDS).padStart(2, '0');
+
+              // Update icons
+              const activeIndex = Math.min(Math.floor(step), FL_CARDS - 1);
+              document.querySelectorAll('.fl-icon').forEach((icon, i) => {
+                icon.classList.remove('fl-icon-past', 'fl-icon-active');
+                if (i < activeIndex) icon.classList.add('fl-icon-past');
+                else if (i === activeIndex) icon.classList.add('fl-icon-active');
+              });
+            }
+          }
+        }
+      });
+
+      for (let i = 0; i < FL_CARDS - 1; i++) {
+        const t = i;
+
+        // Card exits — immediateRender:false prevents FROM state overriding the enter tween
+        flTl.fromTo(flCards[i],
+          { y: 0, opacity: 1, scale: 1, immediateRender: false },
+          { y: -70, opacity: 0, scale: 0.94, duration: 0.55, ease: 'power2.in' },
+          t
+        );
+
+        // Timeline item appears
+        flTl.fromTo(flTlItems[i],
+          { opacity: 0, x: -12 },
+          { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out' },
+          t + 0.15
+        );
+
+        // Line grows
+        flTl.fromTo(flFill,
+          { height: `${(i / FL_CARDS) * 100}%` },
+          { height: `${((i + 1) / FL_CARDS) * 100}%`, duration: 0.4 },
+          t + 0.15
+        );
+
+        // Next card enters from below
+        flTl.fromTo(flCards[i + 1],
+          { y: 90, opacity: 0, scale: 1 },
+          { y: 0, opacity: 1, duration: 0.65, ease: 'power2.out' },
+          t + 0.35
+        );
+      }
+
+      // Last timeline item + full line
+      flTl.fromTo(flTlItems[FL_CARDS - 1],
+        { opacity: 0, x: -12 },
+        { opacity: 1, x: 0, duration: 0.4 },
+        FL_CARDS - 0.6
+      );
+      flTl.fromTo(flFill,
+        { height: `${((FL_CARDS - 1) / FL_CARDS) * 100}%` },
+        { height: '100%', duration: 0.4 },
+        FL_CARDS - 0.6
+      );
+
+      // Scroll fade-up for all .fade-up elements
+      gsap.utils.toArray('.fade-up').forEach(el => {
+        gsap.to(el, {
+          y: 0, opacity: 1, duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none none'
+          }
+        });
+      });
+
+      // Counter animation for stats
+      gsap.utils.toArray('.stat-number').forEach(el => {
+        const target = parseInt(el.getAttribute('data-target'));
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 85%',
+          onEnter: () => {
+            gsap.to({ val: 0 }, {
+              val: target, duration: 1.6, ease: 'power2.out',
+              onUpdate: function () {
+                el.textContent = Math.round(this.targets()[0].val);
+              }
+            });
+          }
+        });
+      });
+
+      // Divider line animation
+      gsap.utils.toArray('.divider').forEach(el => {
+        gsap.from(el, {
+          scaleX: 0, duration: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%' }
+        });
+      });
+
+      // After fonts load, recalculate all positions (fixes first-load layout issues)
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+      });
+    });
+  </script>
+</body>
+</html>
