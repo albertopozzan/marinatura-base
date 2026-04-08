@@ -595,7 +595,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       will-change: transform, opacity;
       backdrop-filter: blur(8px);
       /* Initial state: hidden below — GSAP overrides on init */
@@ -603,10 +603,13 @@
       transform: translateY(90px);
     }
 
-    .fl-card[data-i="0"] {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .fl-card[data-i="0"] { opacity: 1; transform: translateY(0); z-index: 7; }
+    .fl-card[data-i="1"] { z-index: 6; }
+    .fl-card[data-i="2"] { z-index: 5; }
+    .fl-card[data-i="3"] { z-index: 4; }
+    .fl-card[data-i="4"] { z-index: 3; }
+    .fl-card[data-i="5"] { z-index: 2; }
+    .fl-card[data-i="6"] { z-index: 1; }
 
     .fl-card-num { display: none; }
 
@@ -1066,6 +1069,18 @@
     }
 
     /* ─── Responsive ─── */
+    .hero-cta-mobile { display: none; }
+
+    @media (max-width: 900px) {
+      .hero-cta-desktop { display: none; }
+      .hero-cta-mobile {
+        display: inline-block;
+        margin-top: 28px;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
     @media (max-width: 900px) {
       #hero .container,
       #chi-sono .container {
@@ -1101,6 +1116,7 @@
     }
   </style>
 </head>
+<script>history.scrollRestoration = 'manual';</script>
 <body>
 
   <!-- NAV -->
@@ -1118,16 +1134,15 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-eyebrow">
-          <span class="label">Mini corso gratuito</span>
+          <span class="label">Corso Marinatura Base</span>
         </div>
         <h1>
           I <em>segreti</em> della<br>marinatura perfetta
         </h1>
         <p class="hero-sub">
-          Scopri le tecniche che uso ogni giorno nella mia macelleria per trasformare
-          un taglio di carne in un'esperienza indimenticabile.
+          Porta la tua conoscenza sulla marinatura della carne al livello successivo, accedi ai segreti di chi la carne la vive partendo dall'allevamento.
         </p>
-        <a href="#form-section" class="btn-primary">Accedi al corso gratuito</a>
+        <a href="#form-section" class="btn-primary hero-cta-desktop">Accedi al corso gratuito</a>
       </div>
 
       <div class="hero-video-wrapper">
@@ -1140,6 +1155,7 @@
         <div class="video-border-deco"></div>
         <div class="video-border-deco-2"></div>
       </div>
+      <a href="#form-section" class="btn-primary hero-cta-mobile">Guarda il video</a>
     </div>
   </section>
 
@@ -1152,7 +1168,7 @@
         <span class="label fade-up">Accesso immediato</span>
         <h2 class="fade-up">Entra nel corso ora</h2>
         <p class="sub fade-up">
-          Lascia la tua email e accedi subito al videocorso. È gratuito.
+          Lascia la tua email e accedi subito al videocorso al costo di un calice di vino
         </p>
 
         <!-- Step indicator -->
@@ -1483,8 +1499,6 @@
     window.addEventListener('load', () => {
       if (typeof gsap === 'undefined') return;
 
-      // Prevent browser scroll restoration causing mid-page init
-      history.scrollRestoration = 'manual';
       window.scrollTo(0, 0);
 
       // Init Lucide icons
