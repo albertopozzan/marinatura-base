@@ -1632,6 +1632,19 @@
       const flMobFill  = document.getElementById('fl-mob-fill');
       const flMobCount = document.getElementById('fl-mob-counter');
 
+      // Compute icon center positions relative to the mobile progress track
+      let iconPcts = [];
+      if (isMobile && flMobFill) {
+        const mobTrack = document.querySelector('.fl-mob-track');
+        const trackRect = mobTrack.getBoundingClientRect();
+        const icons = document.querySelectorAll('.fl-icon');
+        iconPcts = Array.from(icons).map(icon => {
+          const r = icon.getBoundingClientRect();
+          const centerX = r.left + r.width / 2 - trackRect.left;
+          return Math.min(Math.max((centerX / trackRect.width) * 100, 0), 100);
+        });
+      }
+
       // Initial state: card 0 visible, rest below
       gsap.set(flCards[0], { y: 0, opacity: 1, scale: 1 });
       for (let i = 1; i < FL_CARDS; i++) {
@@ -1676,18 +1689,31 @@
             });
 
             // Mobile: horizontal progress bar + counter + icons
-            if (flMobFill) {
-              flMobFill.style.width = (self.progress * 100) + '%';
-              const current = Math.min(Math.floor(step) + 1, FL_CARDS);
-              flMobCount.textContent =
-                String(current).padStart(2, '0') + ' / ' + String(FL_CARDS).padStart(2, '0');
+            if (flMobFill && iconPcts.length) {
+              // Interpolate fill to center on the active icon
+              const clamped = Math.min(step, FL_CARDS - 1);
+              const base    = Math.floor(clamped);
+              const frac    = clamped - base;
+              const from    = iconPcts[base];
+              const to      = base < FL_CARDS - 1 ? iconPcts[base + 1] : from;
+              const cursorPct = from + (to - from) * frac;
+              flMobFill.style.width = cursorPct + '%';
 
-              // Update icons
-              const activeIndex = Math.min(Math.floor(step), FL_CARDS - 1);
+              // Find the icon closest to cursor position
+              let activeIdx = 0;
+              let minDist = Math.abs(cursorPct - iconPcts[0]);
+              for (let j = 1; j < FL_CARDS; j++) {
+                const dist = Math.abs(cursorPct - iconPcts[j]);
+                if (dist < minDist) { minDist = dist; activeIdx = j; }
+              }
+
+              flMobCount.textContent =
+                String(activeIdx + 1).padStart(2, '0') + ' / ' + String(FL_CARDS).padStart(2, '0');
+
               document.querySelectorAll('.fl-icon').forEach((icon, i) => {
                 icon.classList.remove('fl-icon-past', 'fl-icon-active');
-                if (i < activeIndex) icon.classList.add('fl-icon-past');
-                else if (i === activeIndex) icon.classList.add('fl-icon-active');
+                if (i < activeIdx) icon.classList.add('fl-icon-past');
+                else if (i === activeIdx) icon.classList.add('fl-icon-active');
               });
             }
           }
