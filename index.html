@@ -35,6 +35,11 @@
 
     body {
       background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 85% 55% at 8%  92%, rgba(190, 135, 35, 0.13) 0%, transparent 55%),
+        radial-gradient(ellipse 65% 45% at 92% 8%,  rgba(120,  80, 20, 0.09) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 40% at 28% 22%, rgba(160, 115, 40, 0.07) 0%, transparent 48%),
+        radial-gradient(ellipse 100% 55% at 50% 105%, rgba(55, 38, 10, 0.30) 0%, transparent 58%);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-size: 17px;
@@ -48,8 +53,22 @@
       position: fixed;
       inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.03;
+      opacity: 0.045;
       mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── Vignette — bordi che recedono, centro che avanza ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 115% 115% at 50% 50%,
+        transparent 30%,
+        rgba(4, 3, 1, 0.45) 75%,
+        rgba(2, 1, 0, 0.72) 100%
+      );
       pointer-events: none;
       z-index: 0;
     }
@@ -172,9 +191,49 @@
       font-weight: 700;
       text-decoration: none;
       letter-spacing: 0.04em;
+      position: relative;
+      display: inline-block;
     }
 
-    .logo-img { height: 72px; width: auto; display: block; }
+    /* Logo gold shiny effect */
+    .logo-img {
+      height: 72px;
+      width: auto;
+      display: block;
+      opacity: 0; /* nascosto: il ::after lo sostituisce */
+    }
+
+    @keyframes logo-shimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -100% center; }
+    }
+
+    .nav-logo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        #7A6A3A 0%,
+        #C9A84B 22%,
+        #F0D878 40%,
+        #FFFACC 50%,
+        #F0D878 60%,
+        #C9A84B 78%,
+        #7A6A3A 100%
+      );
+      background-size: 300% 100%;
+      animation: logo-shimmer 5s linear infinite;
+      -webkit-mask-image: url('brand-assets/logo.png');
+      mask-image: url('brand-assets/logo.png');
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: left center;
+      mask-position: left center;
+    }
+
     .nav-cta { font-size: 14px; padding: 12px 28px; }
 
     /* ─── HERO ─── */
@@ -353,27 +412,39 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border: 1px solid var(--gold-dark);
+      border: 1px solid rgba(200,168,75,0.35);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-dim);
+      color: var(--gold-dark);
       transition: all 300ms ease;
     }
 
     .step.active .step-num {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: var(--bg);
+      background: linear-gradient(
+        105deg,
+        #7A6A3A 0%,
+        #C9A84B 22%,
+        #F0D878 40%,
+        #FFFACC 50%,
+        #F0D878 60%,
+        #C9A84B 78%,
+        #7A6A3A 100%
+      );
+      background-size: 300% 100%;
+      animation: logo-shimmer 4s linear infinite;
+      border-color: transparent;
+      color: #0D0B08;
+      box-shadow: 0 0 16px rgba(200,168,75,0.35);
     }
 
     .step.done .step-num {
-      background: rgba(200,168,75,0.15);
-      border-color: var(--gold);
-      color: var(--gold);
+      background: linear-gradient(135deg, #C9A84B 0%, #F0D878 50%, #A8893A 100%);
+      border-color: transparent;
+      color: #0D0B08;
     }
 
     .step-label {
@@ -450,7 +521,27 @@
       box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.1);
     }
 
-    .form-step .btn-primary { width: 100%; text-align: center; }
+    .form-step .btn-primary {
+      width: 100%;
+      text-align: center;
+      background: linear-gradient(
+        105deg,
+        #7A6A3A 0%,
+        #C9A84B 22%,
+        #F0D878 40%,
+        #FFFACC 50%,
+        #F0D878 60%,
+        #C9A84B 78%,
+        #7A6A3A 100%
+      );
+      background-size: 300% 100%;
+      animation: logo-shimmer 4s linear infinite;
+      transition: transform 300ms ease, box-shadow 300ms ease;
+    }
+    .form-step .btn-primary:hover {
+      animation-duration: 1.5s;
+      background-position: unset;
+    }
 
     .checkout-placeholder {
       background: rgba(200,168,75,0.06);
@@ -588,35 +679,39 @@
     .fl-card {
       position: absolute;
       inset: 0;
-      background: rgba(26,22,16,0.9);
-      border: 1px solid rgba(200,168,75,0.18);
+      background: rgba(26,22,16,0.92);
+      border: 1px solid rgba(200,168,75,0.38);
       border-radius: 16px;
       padding: 44px 48px;
-      overflow: hidden;
+      overflow: visible;
       display: flex;
       flex-direction: column;
       justify-content: center;
       will-change: transform, opacity;
       backdrop-filter: blur(8px);
+      box-shadow: 0 0 40px rgba(200,168,75,0.07), inset 0 1px 0 rgba(255,240,160,0.08);
       /* Initial state: hidden below — GSAP overrides on init */
       opacity: 0;
       transform: translateY(90px);
     }
 
-    .fl-card[data-i="0"] { opacity: 1; transform: translateY(0); z-index: 7; }
-    .fl-card[data-i="1"] { z-index: 6; }
-    .fl-card[data-i="2"] { z-index: 5; }
-    .fl-card[data-i="3"] { z-index: 4; }
-    .fl-card[data-i="4"] { z-index: 3; }
-    .fl-card[data-i="5"] { z-index: 2; }
-    .fl-card[data-i="6"] { z-index: 1; }
+    .fl-card[data-i="0"] { opacity: 1; transform: translateY(0); z-index: 7; pointer-events: auto; }
+    .fl-card[data-i="1"] { z-index: 6; pointer-events: none; }
+    .fl-card[data-i="2"] { z-index: 5; pointer-events: none; }
+    .fl-card[data-i="3"] { z-index: 4; pointer-events: none; }
+    .fl-card[data-i="4"] { z-index: 3; pointer-events: none; }
+    .fl-card[data-i="5"] { z-index: 2; pointer-events: none; }
+    .fl-card[data-i="6"] { z-index: 1; pointer-events: none; }
 
     .fl-card-num { display: none; }
 
     .fl-card-body h3 {
       font-size: clamp(22px, 2.8vw, 34px);
       font-weight: 600;
-      color: var(--text);
+      background: linear-gradient(135deg, #D4B96A 0%, #F0D878 40%, #B89040 65%, #E0C870 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: 14px;
       line-height: 1.2;
       position: relative;
@@ -632,8 +727,8 @@
 
     /* Last card special */
     .fl-card-last {
-      border-color: rgba(200,168,75,0.45);
-      box-shadow: 0 0 80px rgba(200,168,75,0.08), inset 0 1px 0 rgba(255,240,160,0.06);
+      border-color: rgba(200,168,75,0.6);
+      box-shadow: 0 0 80px rgba(200,168,75,0.12), inset 0 1px 0 rgba(255,240,160,0.10);
     }
 
     .fl-card-last .fl-card-body h3 {
@@ -657,6 +752,17 @@
       padding: 5px 14px;
       border-radius: 4px;
       margin-bottom: 18px;
+    }
+
+    .fl-card-cta {
+      margin-top: 28px;
+      align-self: flex-start;
+    }
+
+    .fl-card-cta:hover {
+      background-position: 100% 100%;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(180, 140, 50, 0.45), inset 0 1px 0 rgba(255,240,160,0.4);
     }
 
     /* ─── FILIERA MOBILE ─── */
@@ -1142,11 +1248,11 @@
         <p class="hero-sub">
           Porta la tua conoscenza sulla marinatura della carne al livello successivo, accedi ai segreti di chi la carne la vive partendo dall'allevamento.
         </p>
-        <a href="#form-section" class="btn-primary hero-cta-desktop">Accedi al corso gratuito</a>
+        <button class="btn-primary hero-cta-desktop" onclick="openVideoModal()">Guarda l'anteprima</button>
       </div>
 
       <div class="hero-video-wrapper">
-        <div class="video-placeholder">
+        <div class="video-placeholder" onclick="openVideoModal()">
           <div class="play-btn">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
@@ -1155,7 +1261,7 @@
         <div class="video-border-deco"></div>
         <div class="video-border-deco-2"></div>
       </div>
-      <a href="#form-section" class="btn-primary hero-cta-mobile">Guarda il video</a>
+      <button class="btn-primary hero-cta-mobile" onclick="openVideoModal()">Guarda l'anteprima</button>
     </div>
   </section>
 
@@ -1195,7 +1301,7 @@
               <input type="email" id="email" placeholder="tua@email.com" />
             </div>
             <button class="btn-primary" onclick="goToStep2()">
-              Voglio il corso gratuito →
+              Voglio il corso →
             </button>
           </div>
 
@@ -1346,9 +1452,10 @@
         <div class="fl-card fl-card-last" data-i="6">
           <div class="fl-card-num">07</div>
           <div class="fl-card-body">
-            <div class="fl-card-badge">Ciò che ci distingue davvero</div>
+            <div class="fl-card-badge">Academy</div>
             <h3>Ti insegniamo a cuocere<br>e trattare la carne</h3>
             <p>Con i nostri videocorsi. Perché vendere carne di qualità non basta — vogliamo che tu sappia valorizzarla al massimo, ogni volta.</p>
+            <a href="#form-section" class="btn-primary fl-card-cta">Voglio il corso</a>
           </div>
         </div>
 
@@ -1556,6 +1663,12 @@
           onUpdate: (self) => {
             const step = self.progress * FL_CARDS;
 
+            // Pointer events: solo la card attiva è interagibile
+            const activeIndex = Math.min(Math.floor(step), FL_CARDS - 1);
+            flCards.forEach((card, i) => {
+              card.style.pointerEvents = i === activeIndex ? 'auto' : 'none';
+            });
+
             // Desktop: dot timeline
             flTlItems.forEach((item, i) => {
               const threshold = (i + 0.3) / FL_CARDS;
@@ -1668,6 +1781,73 @@
       document.fonts.ready.then(() => {
         ScrollTrigger.refresh();
       });
+    });
+  </script>
+
+  <!-- ═══ VIDEO MODAL ═══ -->
+  <div id="video-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(5,4,2,0.92);
+    backdrop-filter: blur(12px);
+    align-items: center;
+    justify-content: center;
+  " onclick="closeVideoModal(event)">
+    <div style="
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      aspect-ratio: 16/9;
+      border: 1px solid rgba(200,168,75,0.35);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(0,0,0,0.8);
+    ">
+      <iframe id="video-iframe"
+        src=""
+        style="width:100%;height:100%;border:none;"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+      </iframe>
+      <button onclick="closeVideoModal()" style="
+        position: absolute;
+        top: 14px; right: 14px;
+        background: rgba(13,11,8,0.8);
+        border: 1px solid rgba(200,168,75,0.3);
+        color: #F5EFE0;
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1;
+      ">✕</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Sostituisci con l'URL del tuo video YouTube o Vimeo ──
+    const VIDEO_URL = 'https://www.youtube.com/embed/VIDEO_ID?autoplay=1&rel=0';
+
+    function openVideoModal() {
+      const modal = document.getElementById('video-modal');
+      document.getElementById('video-iframe').src = VIDEO_URL;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal(e) {
+      if (e && e.target !== document.getElementById('video-modal') && e.currentTarget !== document.getElementById('video-modal')) return;
+      const modal = document.getElementById('video-modal');
+      modal.style.display = 'none';
+      document.getElementById('video-iframe').src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeVideoModal();
     });
   </script>
 </body>
