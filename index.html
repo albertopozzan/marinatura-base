@@ -1392,7 +1392,7 @@
           <div class="fl-tl-item" data-i="2"><span class="fl-tl-title">Alleviamo le bovine</span></div>
           <div class="fl-tl-item" data-i="3"><span class="fl-tl-title">Lavoriamo la carne</span></div>
           <div class="fl-tl-item" data-i="4"><span class="fl-tl-title">Componiamo la tua box</span></div>
-          <div class="fl-tl-item" data-i="5"><span class="fl-tl-title">Spediamo in tutta Italia</span></div>
+          <div class="fl-tl-item" data-i="5"><span class="fl-tl-title">Spedizione assicurata e garantita</span></div>
           <div class="fl-tl-item fl-tl-last-item" data-i="6"><span class="fl-tl-title">I nostri Videocorsi</span></div>
         </div>
       </div>
@@ -1443,8 +1443,8 @@
         <div class="fl-card" data-i="5">
           <div class="fl-card-num">06</div>
           <div class="fl-card-body">
-            <h3>Spediamo in tutta Italia</h3>
-            <p>Con furgoni a temperatura controllata. Consegna garantita in 24–72 ore. La catena del freddo non si rompe mai.</p>
+            <h3>Spedizione assicurata e garantita</h3>
+            <p>Spediamo in tutta italia con furgoni refrigerati.<br>La spedizione è assicurata, per qualsiasi problema attibuito al corriere, rispediamo la merce o rimborsiamo la spesa.</p>
           </div>
         </div>
 
@@ -1476,20 +1476,20 @@
       <!-- Stats -->
       <div class="stats-grid">
         <div class="stat-item fade-up">
-          <div class="stat-number" data-target="20">0</div>
-          <div class="stat-label">Anni di esperienza</div>
+          <div class="stat-number" data-target="22">0</div>
+          <div class="stat-label">Anni di esperienza in allevamento</div>
         </div>
         <div class="stat-item fade-up">
           <div class="stat-number" data-target="100">0</div>
-          <div class="stat-label">% filiera controllata</div>
+          <div class="stat-label">% filiera controllata da noi</div>
         </div>
         <div class="stat-item fade-up">
-          <div class="stat-number" data-target="500">0</div>
-          <div class="stat-label">Clienti soddisfatti</div>
+          <div class="stat-number" id="order-count" data-target="10228">0</div>
+          <div class="stat-label">Ordini evasi online</div>
         </div>
         <div class="stat-item fade-up">
-          <div class="stat-number" data-target="12">0</div>
-          <div class="stat-label">Tagli selezionati</div>
+          <div class="stat-number" data-target="11">0</div>
+          <div class="stat-label">Anni di negozio a km 0</div>
         </div>
       </div>
 
@@ -1779,6 +1779,16 @@
           }
         });
       });
+
+      // Fetch live order count from Netlify function
+      fetch('/.netlify/functions/order-count')
+        .then(r => r.json())
+        .then(data => {
+          if (data.count) {
+            document.getElementById('order-count').setAttribute('data-target', data.count);
+          }
+        })
+        .catch(() => {});
 
       // Counter animation for stats
       gsap.utils.toArray('.stat-number').forEach(el => {
