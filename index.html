@@ -813,6 +813,8 @@
         transform: scale(0.55);
         transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
         flex: 1;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .fl-icon svg,
@@ -1766,6 +1768,19 @@
 
       // Force GSAP to initialize all fromTo states correctly on first scroll
       flTl.progress(1).progress(0);
+
+      // Click su icona → scroll alla card corrispondente
+      document.querySelectorAll('.fl-icon').forEach((icon, i) => {
+        icon.addEventListener('click', () => {
+          const st = flTl.scrollTrigger;
+          if (!st) return;
+          const D = flTl.duration() || 1;
+          // Card i è pienamente visibile a t = i nel timeline
+          const targetProgress = Math.min(Math.max(i / D, 0), 1);
+          const targetScroll = st.start + targetProgress * (st.end - st.start);
+          window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        });
+      });
 
       // Scroll fade-up for all .fade-up elements
       gsap.utils.toArray('.fade-up').forEach(el => {
